@@ -1,0 +1,19 @@
+# Configuration file for a Robocorp digital worker
+#
+# For formatting information see: https://robocorp.com/docs/setup/robot-yaml-format
+
+tasks:
+  Rank Teams by Score:
+    command:
+      - python
+      - task.py
+      - input/league-sample-games.csv
+      - output/league-results.csv
+condaConfigFile: conda.yaml
+artifactsDir: output
+PATH:
+  - .
+PYTHONPATH:
+  - .
+ignoreFiles:
+  - .gitignore
