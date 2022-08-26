@@ -55,28 +55,32 @@ class Ranking:
             lastScore = 0
             lastPosition = 0
             classification = []
-            for tup in sort:
-                print(tup)
-                if(lastPosition == 0):
-                    lastPosition = 1
-                    lastScore = tup[1]
-                    team = tup[0] + " " + str(lastPosition)
-                    classification.append(team)
-                elif(tup[1] == lastScore):
-                    team = tup[0] + " " + str(lastPosition)
-                    classification.append(team)
-                else:
-                    lastScore = tup[1]
-                    lastPosition = len(classification)
-                    team = tup[0] + " " + str(lastPosition)
-                    classification.append(team)
-                    lastPosition = lastPosition + 1
-
+            classification.append(["Place","Team","Score"])
+            with open(self.output, 'w+', newline="") as file:
+                writer = csv.writer(file)
+                for index, tup in enumerate(sort):
+                    name, score = tup
+                    team = ""
+                    if(index == 0):
+                        lastPosition = 1
+                        lastScore = score
+                        classification.append([name, lastPosition, str(score) + " pts"])
+                    elif(score == lastScore):
+                        classification.append([name, lastPosition, str(score) + " pts"])
+                    else:
+                        lastScore = score
+                        lastPosition = len(classification)
+                        lastPosition = lastPosition + 1
+                        classification.append([name, lastPosition, str(score) + " pts"])
+                for team in classification:
+                    writer.writerow(team)
+                
                 print(classification)
+                
+                
                 # classification.append(' '.join(tup))
                 # converted.append(dict(tup))
 
-            print(classification)
             # ignore for now
             # header = ['Place', 'Team', 'Score']
             # data = {'Bulls': 7, 'Otters': 0, 'Dragons': 4, 'The Kraken': 1, 'Sluggers': 4}

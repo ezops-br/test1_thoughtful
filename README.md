@@ -4,6 +4,14 @@
 
 # 🏒 Python Hockey Challenge
 
+**How to Run**
+- Clone the repository
+- Run into terminal: `python3 task.py input_file output_file`
+
+positional arguments:
+  input_file   Location of input CSV
+  output_file  Location to write output CSV
+
 _A project template for the [Python Hockey Challenge](https://www.notion.so/thoughtfulautomation/Python-Hockey-Challenge-e31a7aa6929b433fa0c3214bebb83607) by [Thoughtful Automation](https://www.thoughtfulautomation.com)._
 
 **Table of Contents**
