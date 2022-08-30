@@ -12,45 +12,8 @@ class Ranking:
         self.output = output
         with open(self.input, newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-            games = []
-            for index, [team1, team2] in enumerate(spamreader):
-                if (index):
-                    teamOneScore = re.findall(r'\d+', team1)
-                    teamOneName = re.findall(r'[a-zA-Z]+', team1)
-                    teamTwoScore = re.findall(r'\d+', team2)
-                    teamTwoName = re.findall(r'[a-zA-Z]+', team2)
-                    game = {}
-                    game['team-one'] = ' '.join(teamOneName)
-                    game['score-one'] = int(teamOneScore[0])
-                    game['team-two'] = ' '.join(teamTwoName)
-                    game['score-two'] = int(teamTwoScore[0])
-                    games.append(game)
-
-            results = {}
-            for game in games:
-                # {'team-one': 'Bulls', 'score-one': '4', 'team-two': 'Otters', 'score-two': '1'}
-                teamOne = game['team-one']
-                teamTwo = game['team-two']
-                scoreOne = 0
-                scoreTwo = 0
-
-                if(game['score-one'] > game['score-two']):
-                    scoreOne = 3
-                elif(game['score-one'] < game['score-two']):
-                    scoreTwo = 3
-                else:
-                    scoreOne = 1
-                    scoreTwo = 1
-
-                if(teamOne in results):
-                    results[teamOne] = results[teamOne] + scoreOne
-                else:
-                    results[teamOne] = scoreOne
-
-                if(teamTwo in results):
-                    results[teamTwo] = results[teamTwo] + scoreTwo
-                else:
-                    results[teamTwo] = scoreTwo
+            games = getGames(spamreader)
+            results = getTeams(games)
             sort = sorted(results.items(), key=lambda x: x[1], reverse=1)
             lastScore = 0
             lastPosition = 0
@@ -73,66 +36,49 @@ class Ranking:
                         lastPosition = lastPosition + 1
                         classification.append([name, lastPosition, str(score) + " pts"])
                 for team in classification:
-                    writer.writerow(team)
-                
-                print(classification)
-                
-                
-                # classification.append(' '.join(tup))
-                # converted.append(dict(tup))
-
-            # ignore for now
-            # header = ['Place', 'Team', 'Score']
-            # data = {'Bulls': 7, 'Otters': 0, 'Dragons': 4, 'The Kraken': 1, 'Sluggers': 4}
-
-            # with open(output, 'w', encoding='UTF8') as f:
-            #     writer = csv.writer(f)
-
-            #     # write the header
-            #     writer.writerow(header)
-
-            #     # write the data
-            #     writer.writerow(data)
+                    writer.writerow(team)                
     pass
 
+def getTeams(games):
+    results = {}
+    for game in games:
+        # {'team-one': 'Bulls', 'score-one': '4', 'team-two': 'Otters', 'score-two': '1'}
+        teamOne = game['team-one']
+        teamTwo = game['team-two']
+        scoreOne = 0
+        scoreTwo = 0
 
-'''
+        if(game['score-one'] > game['score-two']):
+            scoreOne = 3
+        elif(game['score-one'] < game['score-two']):
+            scoreTwo = 3
+        else:
+            scoreOne = 1
+            scoreTwo = 1
 
-Teams:
+        if(teamOne in results):
+            results[teamOne] = results[teamOne] + scoreOne
+        else:
+            results[teamOne] = scoreOne
 
-Bulls
-Dragons
-Otters
-Sluggers
-The Kraken
+        if(teamTwo in results):
+            results[teamTwo] = results[teamTwo] + scoreTwo
+        else:
+            results[teamTwo] = scoreTwo
+    return results
 
-[
-    {
-        team1: Bulls,
-        score1: 4,
-        team2: Otters,
-        score2: 1,
-    },
-    {
-        team1: Dragons,
-        score1: 2,
-        team2: The Kraken,
-        score2: 2,
-    },
-    {
-        team1: Otters,
-        score1: 1,
-        team2: Dragons,
-        score2: 2,
-    },
-    .....
-]
--------------
-[
-    {
-        name: Bulls,
-        score: 0
-    },
-]
-
-'''
+def getGames(spamreader):
+    games = []
+    for index, [team1, team2] in enumerate(spamreader):
+        if (index):
+            teamOneScore = re.findall(r'\d+', team1)
+            teamOneName = re.findall(r'[a-zA-Z]+', team1)
+            teamTwoScore = re.findall(r'\d+', team2)
+            teamTwoName = re.findall(r'[a-zA-Z]+', team2)
+            game = {}
+            game['team-one'] = ' '.join(teamOneName)
+            game['score-one'] = int(teamOneScore[0])
+            game['team-two'] = ' '.join(teamTwoName)
+            game['score-two'] = int(teamTwoScore[0])
+            games.append(game)
+    return games
